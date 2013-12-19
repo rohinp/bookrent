@@ -8,27 +8,24 @@
 
 namespace src\test\book\utility;
 require(dirname(__FILE__) . "/../../../main/book/utility/StoreUtility.php");
-require(dirname(__FILE__) . "/../../../main/book/factory/DBFactory.php");
+require(dirname(__FILE__) . "/../../../main/book/factory/SQLEngine.php");
+
 
 
 use src\main\book\utility\StoreUtility as StoreUtility;
-use src\main\book\factory\DBFactory as DBFactory;
+use src\main\book\factory\SQLEngine as SQLEngine;
 
 class StoreUtilityTest extends \PHPUnit_Framework_TestCase {
-
-    private $con;
 
     public function testToCheckQueryObjectToBookDataStructuredConverted(){
         //given
         $store = new StoreUtility();
-        DBFactory::openConnection();
-        $this->con = DBFactory::getConnection();
-        $result = mysqli_query($this->con,"select * from book");
+        SQLEngine::executeQuery("select * from book");
+        $result = SQLEngine::getResultSet();
         //when
         $actual = $store->queryToBook($result);
         //then
         assert($result->num_rows == count($actual));
-        DBFactory::closeConnection();
     }
 
 }

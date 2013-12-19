@@ -48,7 +48,10 @@ namespace src\main\book\entity {
         }
 
         public function getTags(){
-            return $this->tags;
+            $tagsList = "";
+            foreach($this->tags as $tg)
+                $tagsList .=  $tg . ",";
+            return $tagsList;
         }
 
         public function setCost($mrp){
@@ -57,6 +60,11 @@ namespace src\main\book\entity {
 
         public function getCost(){
             return $this->cost;
+        }
+
+        public function getDateTime(){
+            date_default_timezone_set(date_default_timezone_get());
+            return date("Y-m-d H:i:s");
         }
     }
 

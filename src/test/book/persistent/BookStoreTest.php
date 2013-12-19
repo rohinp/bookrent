@@ -7,28 +7,29 @@
  */
 
 namespace src\test\book\persistent;
-require(dirname(__FILE__) . "/../../../main/book/entity/Book.php");
 require(dirname(__FILE__) . "/../../../main/book/persistent/BookStore.php");
-require(dirname(__FILE__) . "/../../../main/book/booksearch/BookSearch.php");
-require(dirname(__FILE__) . "/../../../main/book/booksearch/ISBNSearch.php");
 
 use src\main\book\entity\Book as Book;
 use src\main\book\persistent\BookStore as BookStore;
-use src\main\book\search\BookSearch as BookSearch;
-use src\main\book\search\ISBNSearch;
 
 class BookStoreTest extends \PHPUnit_Framework_TestCase {
 
     public function testShouldStoreBookInDatabase(){
         //given
         $bookStore = new BookStore();
-        $bookSearch = new BookSearch($bookStore, new ISBNSearch());
-        $book = new Book("1234");
 
+        $book = new Book("12777");
+        $book->setAuthor("test");
+        $book->setTag("new,entry");
+        $book->setTitle("newTitle");
+        $book->setCost(100);
+        $book->setSubTitle("testSubTitle");
         //when
+        $initialBookCount = $bookStore->getTotalBooks();
         $bookStore->addBook($book);
 
         //then
+        assert($initialBookCount + 1,$bookStore->getTotalBooks() );
     }
 
 }

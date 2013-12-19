@@ -26,7 +26,6 @@ class StoreUtility {
             $this->createBook($row, $index);
             $index++;
         }
-        print_r($this->books);
         return $this->books;
     }
 

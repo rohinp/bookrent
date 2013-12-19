@@ -2,8 +2,7 @@
 
 namespace src\main\book\persistent;
 
-require(dirname(__FILE__) . "/../entity/Book.php");
-require(dirname(__FILE__) . "/../factory/DBFactory.php");
+require(dirname(__FILE__) . "/../factory/SQLEngine.php");
 require(dirname(__FILE__) . "/../dbgateway/BookStorable.php");
 
 use src\main\book\dbgateway\BookStorable as BookStorable;
@@ -17,18 +16,28 @@ class BookStore implements BookStorable{
     }
 
     public function addBook(Book $book){
-        $this->sqlQuery = "INSERT INTO book (isbn,title,author,tags,subtitle,cost,dateadded)";
-        $this->sqlQuery .= " VALUES ";
-        $this->sqlQuery .= "('$book->getISBN()','$book->getTitle()','$book->getAuthor()','$book->getTags()','$book->getSubTitle()', '" . date("Y-m-d H:i:s"). "')";
+        $this->sqlQuery = "INSERT INTO book (isbn,title,author,tags,subtitle,cost,dateadded)  VALUES ";
+        $this->sqlQuery .= "('". $book->getISBN()." ','". $book->getTitle(). "','". $book->getAuthor()."','";
+        $this->sqlQuery .= $book->getTags()."','".$book->getSubTitle()."', '".$book->getDateTime()."')";
         SQLEngine::executeQuery($this->sqlQuery);
     }
+
     public function updateBook(Book $book){
-        $this->sqlQuery = "";
+        $this->sqlQuery = "UPDATE book";
+        $this->sqlQuery .= "SET title='$book->getTitle()', author='$book->getAuthor()', tags ='$book->getTags()', subtitle = '$book->getCost()', dateadded = '$book->getDateTime()'";
+        $this->sqlQuery .= "WHERE isbn = '$book->getISBN()'";
         SQLEngine::executeQuery($this->sqlQuery);
     }
+
     public function deleteBook(Book $book){
-        $this->sqlQuery = "";
+        $this->sqlQuery = "DELETE FROM book";
+        $this->sqlQuery .= "WHERE isbn = '$book->getISBN()'";
         SQLEngine::executeQuery($this->sqlQuery);
+    }
+
+    public function getTotalBooks(){
+        SQLEngine::executeQuery("SELECT COUNT(*) FROM book");
+        return SQLEngine::getResultSet();
     }
 }
 
